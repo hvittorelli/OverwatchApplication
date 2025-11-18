@@ -1,0 +1,43 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="landing-page">
+    <h1 style="text-shadow: 2px 2px 5px rgba(0,0,0,0.7); font-size: 4rem">
+        Welcome to
+    </h1>
+    <img src="~/images/logo3.png" alt="Logo Image" class="img-fluid rounded" style="max-width: 300px;" />
+
+    <div class="container">
+        <div class="card-container">
+            <div class="card about-card">
+                <div class="card-body">
+                    <h5 class="card-title">About Our App</h5>
+                    <p class="card-text">
+                        The Overwatch Heroes Application is designed to allow users to view the playable heroes in the video game Overwatch. This app organizes the heroes' information so that new users can learn the skills and abilities of each hero for an easy jumping off point.
+                    </p>
+                    <a class="btn btn-secondary" asp-controller="Home" asp-action=" ">Get Started!</a>
+                </div>
+            </div>
+
+            <div class="bottom-cards">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Contact Us</h5>
+                        <p class="card-text">Have questions for us? Reach out!</p>
+                        <a class="btn btn-secondary" asp-controller="Home" asp-action="Contact">Contact</a>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Privacy Policy</h5>
+                        <p class="card-text">Learn about how we handle your data and privacy.</p>
+                        <a class="btn btn-secondary" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
