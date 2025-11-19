@@ -48,7 +48,12 @@ namespace OverwatchApplication.Controllers
         public IActionResult Create()
         {
             ViewData["HeroID"] = new SelectList(_context.Heroes, "HeroID", "HeroID");
+            ViewBag.Heroes = _context.Heroes.ToList();
+
+            ViewBag.Heroes = new SelectList(_context.Heroes, "HeroID", "Name");
+
             return View();
+
         }
 
         // POST: Abilities/Create
@@ -82,6 +87,9 @@ namespace OverwatchApplication.Controllers
                 return NotFound();
             }
             ViewData["HeroID"] = new SelectList(_context.Heroes, "HeroID", "HeroID", ability.HeroID);
+            ViewBag.Heroes = new SelectList(_context.Heroes, "HeroID", "Name");
+
+
             return View(ability);
         }
 

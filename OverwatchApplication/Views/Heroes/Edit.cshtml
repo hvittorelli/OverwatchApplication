@@ -1,69 +1,103 @@
 ﻿@model OverwatchApplication.Models.Hero
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Hero";
 }
 
-<h1>Edit</h1>
+<h1 class="ow-title">Edit Hero</h1>
 
-<h4>Hero</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="HeroID" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Role" class="control-label"></label>
-                <select asp-for="Role" class="form-control"></select>
-                <span asp-validation-for="Role" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageURL" class="control-label"></label>
-                <input asp-for="ImageURL" class="form-control" />
-                <span asp-validation-for="ImageURL" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CountryOfOrigin" class="control-label"></label>
-                <input asp-for="CountryOfOrigin" class="form-control" />
-                <span asp-validation-for="CountryOfOrigin" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DifficultyToMaster" class="control-label"></label>
-                <input asp-for="DifficultyToMaster" class="form-control" />
-                <span asp-validation-for="DifficultyToMaster" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <input asp-for="Gender" class="form-control" />
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="WeaponType" class="control-label"></label>
-                <input asp-for="WeaponType" class="form-control" />
-                <span asp-validation-for="WeaponType" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Edit" class="ow-form" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <input type="hidden" asp-for="HeroID" />
+
+    <!-- Name -->
+    <div class="ow-field">
+        <label asp-for="Name" class="ow-label"></label>
+        <input asp-for="Name" class="ow-input" />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <!-- Role -->
+    <div class="ow-field">
+        <label asp-for="Role" class="ow-label"></label>
+        <select asp-for="Role" class="ow-input">
+            <option value="">Select a Role</option>
+            <option>Tank</option>
+            <option>Damage</option>
+            <option>Support</option>
+        </select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <!-- Description -->
+    <div class="ow-field">
+        <label asp-for="Description" class="ow-label"></label>
+        <textarea asp-for="Description" class="ow-input" rows="2"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <!-- Image upload -->
+    <div class="mb-3">
+        <label class="form-label">Hero Image</label>
+        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+    </div>
+
+    <!-- Image preview -->
+    <div class="mb-3">
+        <label class="form-label">Current Image</label><br />
+        <img id="heroPreview" src="@Model?.ImageURL" alt="Hero Image" class="img-thumbnail mb-2" width="150" />
+    </div>
+
+    <!-- Country of Origin -->
+    <div class="ow-field">
+        <label asp-for="CountryOfOrigin" class="ow-label"></label>
+        <input asp-for="CountryOfOrigin" class="ow-input" />
+        <span asp-validation-for="CountryOfOrigin" class="text-danger"></span>
+    </div>
+
+    <!-- Difficulty -->
+    <div class="ow-field">
+        <label asp-for="DifficultyToMaster" class="ow-label"></label>
+        <input asp-for="DifficultyToMaster" class="ow-input" />
+        <span asp-validation-for="DifficultyToMaster" class="text-danger"></span>
+    </div>
+
+    <!-- Gender -->
+    <div class="ow-field">
+        <label asp-for="Gender" class="ow-label"></label>
+        <input asp-for="Gender" class="ow-input" />
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <!-- Weapon Type -->
+    <div class="ow-field">
+        <label asp-for="WeaponType" class="ow-label"></label>
+        <input asp-for="WeaponType" class="ow-input" />
+        <span asp-validation-for="WeaponType" class="text-danger"></span>
+    </div>
+
+    <!-- Submit -->
+    <div class="ow-actions">
+        <button type="submit" class="ow-btn">Save Changes</button>
+        <a asp-action="Index" class="ow-link">Back to List</a>
+    </div>
+</form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        const input = document.querySelector("[name='ImageFile']");
+        const img = document.getElementById("heroPreview");
+
+        input.addEventListener("change", e => {
+            const file = e.target.files[0];
+            if (file) {
+                img.src = URL.createObjectURL(file);
+            }
+        });
+    </script>
 }

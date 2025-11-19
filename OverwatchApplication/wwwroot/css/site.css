@@ -178,3 +178,71 @@ body {
     text-shadow: 2px 2px 4px #000; 
 }
 
+/* HEADER */
+.ow-title {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #2a2d34;
+    border-left: 6px solid #f2950f; /* soft OW orange */
+    padding-left: 10px;
+}
+
+/* FORM */
+.ow-form {
+    max-width: 650px;
+}
+
+/* FIELD GROUP */
+.ow-field {
+    margin-bottom: 1rem;
+}
+
+/* LABEL */
+.ow-label {
+    font-weight: 600;
+    color: #3a3f47;
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+/* INPUTS */
+.ow-input {
+    width: 100%;
+    padding: 0.55rem .7rem;
+    border-radius: 6px;
+    border: 1px solid #d5d8dd;
+    background: #ffffff;
+}
+
+.ow-input:focus {
+    outline: none;
+    border-color: #f2950f;     /* OW orange */
+    box-shadow: 0 0 0 2px rgba(242,149,15,0.25);
+}
+
+/* BUTTON */
+.ow-btn {
+    background: #f2950f;   /* OW orange */
+    border: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.ow-btn:hover {
+    background: #db850d;
+}
+
+/* BACK LINK */
+.ow-link {
+    margin-left: 1rem;
+    text-decoration: none;
+    font-weight: 600;
+    color: #4a4f58;
+}
+
+.ow-link:hover {
+    color: #f2950f;
+}
