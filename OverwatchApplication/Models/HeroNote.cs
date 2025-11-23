@@ -19,16 +19,5 @@ namespace OverwatchApplication.Models
 
         public int UserID { get; set; }
         public User? User { get; set; }
-
-        // Methods
-        public void UpdateNoteContent(string newContent)
-        {
-            // Implement in Sprint 3
-        }
-
-        public void UpdateHours(float newHours)
-        {
-            // Implement in Sprint 3
-        }
     }
 }

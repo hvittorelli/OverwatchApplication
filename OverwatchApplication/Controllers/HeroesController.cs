@@ -19,9 +19,43 @@ namespace OverwatchApplication.Controllers
         }
 
         // GET: Heroes
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string selectedRole, string sortOrder)
         {
-            return View(await _context.Heroes.ToListAsync());
+            ViewData["CurrentSearch"] = searchString;
+            ViewData["CurrentRole"] = selectedRole;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DifficultySortParm"] = sortOrder == "difficulty" ? "difficulty_desc" : "difficulty";
+
+            var heroes = from h in _context.Heroes select h;
+
+            // Search by Name
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                heroes = heroes.Where(h => h.Name.Contains(searchString));
+            }
+
+            // Filter by Role (Enum comparison instead of string comparison)
+            if (!string.IsNullOrEmpty(selectedRole))
+            {
+                if (Enum.TryParse<RoleType>(selectedRole, out var roleEnum))
+                {
+                    heroes = heroes.Where(h => h.Role == roleEnum);
+                }
+            }
+
+            // Sorting
+            heroes = sortOrder switch
+            {
+                "name_desc" => heroes.OrderByDescending(h => h.Name),
+                "difficulty" => heroes.OrderBy(h => h.DifficultyToMaster),
+                "difficulty_desc" => heroes.OrderByDescending(h => h.DifficultyToMaster),
+                _ => heroes.OrderBy(h => h.Name)
+            };
+
+            // Populate dropdown list in View
+            ViewBag.RoleList = Enum.GetNames(typeof(RoleType)).ToList();
+
+            return View(await heroes.AsNoTracking().ToListAsync());
         }
 
         // GET: Heroes/Details/5

@@ -19,11 +19,9 @@
     <!-- Role -->
     <div class="ow-field">
         <label asp-for="Role" class="ow-label"></label>
-        <select asp-for="Role" class="ow-input">
+        <select asp-for="Role" class="ow-input"
+                asp-items="Html.GetEnumSelectList<OverwatchApplication.Models.RoleType>()">
             <option value="">Select a Role</option>
-            <option>Tank</option>
-            <option>Damage</option>
-            <option>Support</option>
         </select>
         <span asp-validation-for="Role" class="text-danger"></span>
     </div>

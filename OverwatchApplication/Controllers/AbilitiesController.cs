@@ -19,11 +19,44 @@ namespace OverwatchApplication.Controllers
         }
 
         // GET: Abilities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, AbilityType? selectedType, string sortOrder)
         {
-            var overwatchContext = _context.Abilities.Include(a => a.Hero);
-            return View(await overwatchContext.ToListAsync());
+            ViewData["CurrentSearch"] = searchString;
+            ViewData["CurrentType"] = selectedType;
+            ViewData["CurrentSort"] = sortOrder;
+
+            var abilities = _context.Abilities
+                .Include(a => a.Hero)
+                .AsQueryable();
+
+            // Search filter
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                abilities = abilities.Where(a => a.Name.Contains(searchString));
+            }
+
+            // Enum filter
+            if (selectedType.HasValue)
+            {
+                abilities = abilities.Where(a => a.Type == selectedType.Value);
+            }
+
+            // Sorting options
+            abilities = sortOrder switch
+            {
+                "name_desc" => abilities.OrderByDescending(a => a.Name),
+                "cooldown_asc" => abilities.OrderBy(a => a.Cooldown),
+                "cooldown_desc" => abilities.OrderByDescending(a => a.Cooldown),
+                _ => abilities.OrderBy(a => a.Name), // default
+            };
+
+            ViewBag.TypeList = Enum.GetValues(typeof(AbilityType))
+                                   .Cast<AbilityType>()
+                                   .ToList();
+
+            return View(await abilities.AsNoTracking().ToListAsync());
         }
+
 
         // GET: Abilities/Details/5
         public async Task<IActionResult> Details(int? id)
