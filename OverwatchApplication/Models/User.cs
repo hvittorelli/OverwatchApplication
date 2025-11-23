@@ -11,20 +11,5 @@ namespace OverwatchApplication.Models
 
         // Navigation Properties
         public ICollection<HeroNote> Notes { get; set; } = new List<HeroNote>(); 
-        
-        // Methods
-        public void AddNote(HeroNote note) 
-        { 
-            // Implement in Sprint 3
-        } 
-        public void DeleteNote(int noteID) 
-        { 
-            // Implement in Sprint 3
-        } 
-        public List<HeroNote> GetHeroNotes(int heroID) 
-        { 
-            // Implement in Sprint 3
-            return new List<HeroNote>(); 
-        } 
     } 
 }

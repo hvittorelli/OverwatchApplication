@@ -15,13 +15,6 @@ namespace OverwatchApplication.Models
 
         // Navigation property 
         public Hero? Hero { get; set; }
-
-        // Methods
-        public string DisplayAbilityInfo()
-        {
-            // Implement in Sprint 3
-            return "";
-        }
     }
 }
 

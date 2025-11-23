@@ -26,11 +26,9 @@
     <!-- Type -->
     <div class="ow-field">
         <label asp-for="Type" class="ow-label"></label>
-        <select asp-for="Type" class="ow-input">
-            <option value="">Select Type</option>
-            <option>Primary</option>
-            <option>Secondary</option>
-            <option>Ultimate</option>
+        <select asp-for="Type" class="ow-input"
+                asp-items="Html.GetEnumSelectList<OverwatchApplication.Models.AbilityType>()">
+            <option value="">Select Ability Type</option>
         </select>
         <span asp-validation-for="Type" class="text-danger"></span>
     </div>

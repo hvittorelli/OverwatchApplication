@@ -19,9 +19,30 @@ namespace OverwatchApplication.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string sortOrder)
         {
-            return View(await _context.Users.ToListAsync());
+            ViewData["CurrentSearch"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+
+            var users = from u in _context.Users
+                        select u;
+
+            // Search by username or email
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                users = users.Where(u =>
+                    u.UserName.Contains(searchString) ||
+                    u.Email.Contains(searchString));
+            }
+
+            // Sorting
+            users = sortOrder switch
+            {
+                "name_desc" => users.OrderByDescending(u => u.UserName),
+                _ => users.OrderBy(u => u.UserName) // default name ascending
+            };
+
+            return View(await users.AsNoTracking().ToListAsync());
         }
 
         // GET: Users/Details/5

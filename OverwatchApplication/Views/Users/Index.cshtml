@@ -1,47 +1,62 @@
 ﻿@model IEnumerable<OverwatchApplication.Models.User>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Users";
 }
 
-<h1>Index</h1>
+<h1 class="ow-title mb-4">Users</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PasswordHash)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PasswordHash)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserID">Delete</a>
-            </td>
-        </tr>
+<div class="mb-4">
+    <a asp-action="Create" class="ow-btn">✚ Add User</a>
+</div>
+
+<form method="get" class="d-flex justify-content-center gap-2 flex-wrap mb-4">
+
+    <input type="text"
+           name="searchString"
+           class="ow-input"
+           value="@(ViewData["CurrentSearch"]?.ToString() ?? "")"
+           placeholder="Search Username or Email..."
+           style="max-width: 220px;" />
+
+    <select name="sortOrder" class="ow-input" style="max-width: 180px;">
+        <option value="">Sort Username (A–Z)</option>
+        <option value="name_desc">Sort Username (Z–A)</option>
+    </select>
+
+    <button type="submit" class="ow-btn">Apply</button>
+    <a asp-action="Index" class="ow-btn" style="background:#db4c3f;">Clear</a>
+
+</form>
+
+
+<div class="card-grid">
+    @foreach (var user in Model)
+    {
+        <div class="info-card" id="user-@user.UserID">
+
+            <div class="card-title">@user.UserName</div>
+
+            <button class="card-btn ow-btn" onclick="toggleDetails(@user.UserID)">Details</button>
+
+            <div class="card-details" id="details-@user.UserID">
+                <p><strong>Email:</strong> @user.Email</p>
+
+                <div class="mt-3 d-flex justify-content-center gap-2">
+                    <a asp-action="Edit" asp-route-id="@user.UserID" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@user.UserID" class="btn btn-danger btn-sm">Delete</a>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function toggleDetails(id) {
+            const details = document.getElementById("details-" + id);
+            details.classList.toggle("show");
+        }
+    </script>
 }
-    </tbody>
-</table>

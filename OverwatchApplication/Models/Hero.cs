@@ -18,28 +18,5 @@ namespace OverwatchApplication.Models
         // Navigation
         public ICollection<Ability> Abilities { get; set; } = new List<Ability>();
         public ICollection<HeroNote> Notes { get; set; } = new List<HeroNote>();
-
-        // Methods (Sprint 3)
-        public void AddAbility(Ability ability) 
-        {
-            // Implement in Sprint 3
-        }
-        public void RemoveAbility(int abilityID) 
-        {
-            // Implement in Sprint 3
-        }
-        public void AddNote(HeroNote note) 
-        {
-            // Implement in Sprint 3
-        }
-        public void RemoveNote(int noteID) 
-        {
-            // Implement in Sprint 3
-        }
-        public string DisplayHeroInfo()
-        {
-            // Implement in Sprint 3
-            return "";
-        }
     }
 }
