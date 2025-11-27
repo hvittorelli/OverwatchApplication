@@ -6,78 +6,69 @@
 
 <h1 class="ow-title">Edit Hero</h1>
 
-<form asp-action="Edit" class="ow-form" enctype="multipart/form-data">
+<form asp-action="Edit" enctype="multipart/form-data" class="ow-form">
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <input type="hidden" asp-for="HeroID" />
+    <input type="hidden" asp-for="ImageURL" />
 
-    <!-- Name -->
+    @if (!string.IsNullOrEmpty(Model.ImageURL))
+    {
+        <div class="ow-field">
+            <label class="ow-label">Current Image</label>
+            <img src="@Model.ImageURL" style="max-height:150px; border-radius:8px;" />
+        </div>
+    }
+
+    <div class="ow-field">
+        <label class="ow-label">Upload New Image (optional)</label>
+        <input type="file" name="ImageFile" class="ow-input" />
+    </div>
+
     <div class="ow-field">
         <label asp-for="Name" class="ow-label"></label>
         <input asp-for="Name" class="ow-input" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <!-- Role -->
     <div class="ow-field">
         <label asp-for="Role" class="ow-label"></label>
-        <select asp-for="Role" class="ow-input"
-                asp-items="Html.GetEnumSelectList<OverwatchApplication.Models.RoleType>()">
-            <option value="">Select a Role</option>
-        </select>
+        <select asp-for="Role" class="ow-input" asp-items="Html.GetEnumSelectList<RoleType>()"></select>
         <span asp-validation-for="Role" class="text-danger"></span>
     </div>
 
-    <!-- Description -->
     <div class="ow-field">
         <label asp-for="Description" class="ow-label"></label>
-        <textarea asp-for="Description" class="ow-input" rows="2"></textarea>
+        <textarea asp-for="Description" class="ow-input"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
-    <!-- Image upload -->
-    <div class="mb-3">
-        <label class="form-label">Hero Image</label>
-        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
-    </div>
-
-    <!-- Image preview -->
-    <div class="mb-3">
-        <label class="form-label">Current Image</label><br />
-        <img id="heroPreview" src="@Model?.ImageURL" alt="Hero Image" class="img-thumbnail mb-2" width="150" />
-    </div>
-
-    <!-- Country of Origin -->
     <div class="ow-field">
         <label asp-for="CountryOfOrigin" class="ow-label"></label>
         <input asp-for="CountryOfOrigin" class="ow-input" />
         <span asp-validation-for="CountryOfOrigin" class="text-danger"></span>
     </div>
 
-    <!-- Difficulty -->
-    <div class="ow-field">
-        <label asp-for="DifficultyToMaster" class="ow-label"></label>
-        <input asp-for="DifficultyToMaster" class="ow-input" />
-        <span asp-validation-for="DifficultyToMaster" class="text-danger"></span>
-    </div>
-
-    <!-- Gender -->
     <div class="ow-field">
         <label asp-for="Gender" class="ow-label"></label>
         <input asp-for="Gender" class="ow-input" />
         <span asp-validation-for="Gender" class="text-danger"></span>
     </div>
 
-    <!-- Weapon Type -->
     <div class="ow-field">
         <label asp-for="WeaponType" class="ow-label"></label>
         <input asp-for="WeaponType" class="ow-input" />
         <span asp-validation-for="WeaponType" class="text-danger"></span>
     </div>
 
-    <!-- Submit -->
+    <div class="ow-field">
+        <label asp-for="DifficultyToMaster" class="ow-label"></label>
+        <input asp-for="DifficultyToMaster" type="number" min="1" max="5" class="ow-input" />
+        <span asp-validation-for="DifficultyToMaster" class="text-danger"></span>
+    </div>
+
     <div class="ow-actions">
-        <button type="submit" class="ow-btn">Save Changes</button>
+        <button type="submit" class="ow-btn">Save</button>
         <a asp-action="Index" class="ow-link">Back to List</a>
     </div>
 </form>
@@ -86,16 +77,4 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-    <script>
-        const input = document.querySelector("[name='ImageFile']");
-        const img = document.getElementById("heroPreview");
-
-        input.addEventListener("change", e => {
-            const file = e.target.files[0];
-            if (file) {
-                img.src = URL.createObjectURL(file);
-            }
-        });
-    </script>
 }

@@ -133,6 +133,7 @@ namespace OverwatchApplication.Controllers
         }
 
         // POST: Heroes/Edit/5
+        // POST: Heroes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Hero hero, IFormFile ImageFile)
@@ -140,49 +141,64 @@ namespace OverwatchApplication.Controllers
             if (id != hero.HeroID)
                 return NotFound();
 
-            if (ModelState.IsValid)
+            // Load the existing hero from DB (tracked entity)
+            var existingHero = await _context.Heroes.FindAsync(id);
+            if (existingHero == null)
+                return NotFound();
+
+            // Copy editable scalar properties from posted 'hero' to the tracked entity.
+            // Do NOT overwrite ImageURL here (we'll only change it if a new file is uploaded).
+            existingHero.Name = hero.Name;
+            existingHero.Role = hero.Role;
+            existingHero.Description = hero.Description;
+            existingHero.CountryOfOrigin = hero.CountryOfOrigin;
+            existingHero.Gender = hero.Gender;
+            existingHero.WeaponType = hero.WeaponType;
+            existingHero.DifficultyToMaster = hero.DifficultyToMaster;
+            // If you have collections (Abilities), handle them separately if needed.
+
+            // Handle optional image upload
+            if (ImageFile != null && ImageFile.Length > 0)
             {
-                try
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                if (!Directory.Exists(uploadPath))
+                    Directory.CreateDirectory(uploadPath);
+
+                var fileName = Path.GetFileName(ImageFile.FileName);
+                var filePath = Path.Combine(uploadPath, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    // Only update the image if a new file is uploaded
-                    if (ImageFile != null && ImageFile.Length > 0)
-                    {
-                        var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-                        if (!Directory.Exists(uploadPath))
-                            Directory.CreateDirectory(uploadPath);
-
-                        var fileName = Path.GetFileName(ImageFile.FileName);
-                        var filePath = Path.Combine(uploadPath, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await ImageFile.CopyToAsync(stream);
-                        }
-
-                        hero.ImageURL = "/images/" + fileName; // store relative path
-                    }
-                    else
-                    {
-                        // Keep existing image if no new file is uploaded
-                        var existingHero = await _context.Heroes.AsNoTracking()
-                                              .FirstOrDefaultAsync(h => h.HeroID == id);
-                        hero.ImageURL = existingHero?.ImageURL;
-                    }
-
-                    _context.Update(hero);
-                    await _context.SaveChangesAsync();
+                    await ImageFile.CopyToAsync(stream);
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Heroes.Any(e => e.HeroID == hero.HeroID))
-                        return NotFound();
-                    else
-                        throw;
-                }
-                return RedirectToAction(nameof(Index));
+
+                existingHero.ImageURL = "/images/" + fileName;
+            }
+            // else: keep existingHero.ImageURL unchanged
+
+            // Clear ModelState and revalidate the tracked entity so the validator checks the current state.
+            ModelState.Clear();
+            if (!TryValidateModel(existingHero))
+            {
+                // Validation failed — return view with the tracked entity so validation messages show.
+                return View(existingHero);
             }
 
-            return View(hero);
+            try
+            {
+                // Save changes for the tracked entity
+                _context.Update(existingHero);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!_context.Heroes.Any(e => e.HeroID == existingHero.HeroID))
+                    return NotFound();
+                else
+                    throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
 
 

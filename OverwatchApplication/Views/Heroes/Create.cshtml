@@ -6,7 +6,7 @@
 
 <h1 class="ow-title">Create Hero</h1>
 
-<form asp-action="Create" class="ow-form" enctype="multipart/form-data">
+<form asp-action="Create" class="ow-form" enctype="multipart/form-data" id="createHeroForm">
     <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
     <!-- Name -->
@@ -33,10 +33,12 @@
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
-    <!-- File upload -->
+    <!-- File upload (required) -->
     <div class="mb-3">
         <label class="form-label">Hero Image</label>
-        <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+        <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+        <!-- Inline validation target for server-side ModelState errors -->
+        <span data-valmsg-for="ImageFile" data-valmsg-replace="true" class="text-danger"></span>
     </div>
 
     <!-- Image preview -->
@@ -86,16 +88,38 @@
     }
 
     <script>
-        const input = document.querySelector("[name='ImageFile']");
+        // Preview logic
+        const input = document.getElementById("ImageFile");
         const img = document.getElementById("heroPreview");
 
         input.addEventListener("change", e => {
             const file = e.target.files[0];
             if (file) {
                 img.src = URL.createObjectURL(file);
+                // clear any previous inline message
+                const msgSpan = document.querySelector("[data-valmsg-for='ImageFile']");
+                if (msgSpan) msgSpan.textContent = "";
             } else {
                 img.src = "";
             }
+        });
+
+        // Client-side required-file check
+        document.getElementById("createHeroForm").addEventListener("submit", function (ev) {
+            const fileInput = document.getElementById("ImageFile");
+            const msgSpan = document.querySelector("[data-valmsg-for='ImageFile']");
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                // show inline message and prevent submit
+                if (msgSpan) {
+                    msgSpan.textContent = "Image is required";
+                }
+                ev.preventDefault();
+                ev.stopPropagation();
+                return false;
+            }
+            // allow submit
+            return true;
         });
     </script>
 }

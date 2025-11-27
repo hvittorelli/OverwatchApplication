@@ -9,7 +9,7 @@ namespace OverwatchApplication.Models
         public string Name { get; set; } = string.Empty;
         public RoleType Role { get; set; } 
         public string Description { get; set; } = string.Empty;
-        public string ImageURL { get; set; } = string.Empty;
+        public string? ImageURL { get; set; } = string.Empty;
         public string CountryOfOrigin { get; set; } = string.Empty;
         public int DifficultyToMaster { get; set; }
         public string Gender { get; set; } = string.Empty;
